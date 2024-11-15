@@ -8,6 +8,6 @@ rustc_private = true
 
 [dependencies]
 rustc_plugin = { path = "../.." }
-env_logger = "0.10"
+env_logger = "0.11.5"
 clap = {version = "4.4", features = ["derive"]}
 serde = {version = "1", features = ["derive"]}
