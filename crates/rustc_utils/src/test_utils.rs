@@ -169,7 +169,7 @@ impl<'tcx> CompileResult<'tcx> {
   pub fn as_body_with_range(
     &self,
     target: ByteRange,
-  ) -> (BodyId, &'tcx BodyWithBorrowckFacts) {
+  ) -> (BodyId, &'tcx BodyWithBorrowckFacts<'tcx>) {
     let tcx = self.tcx;
     let body_id = find_enclosing_bodies(tcx, target.to_span(tcx).unwrap())
       .next()
