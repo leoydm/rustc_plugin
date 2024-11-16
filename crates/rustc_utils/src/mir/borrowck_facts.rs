@@ -6,7 +6,7 @@ use rustc_borrowck::consumers::{BodyWithBorrowckFacts, ConsumerOptions};
 use rustc_data_structures::fx::FxHashSet as HashSet;
 use rustc_hir::def_id::LocalDefId;
 use rustc_middle::{
-  mir::{Body, BorrowCheckResult, MirPass, StatementKind, TerminatorKind},
+  mir::{Body, BorrowCheckResult, StatementKind, TerminatorKind},
   ty::TyCtxt,
   util::Providers,
 };
@@ -18,8 +18,8 @@ use crate::{block_timer, cache::Cache, BodyExt};
 /// This pass helps reduce the number of intermediates during dataflow analysis, which
 /// reduces memory usage.
 pub struct SimplifyMir;
-impl<'tcx> MirPass<'tcx> for SimplifyMir {
-  fn run_pass(&self, _tcx: TyCtxt<'tcx>, body: &mut Body<'tcx>) {
+impl SimplifyMir {
+  fn run_pass(&self, _tcx: TyCtxt, body: &mut Body) {
     let return_blocks = body
       .all_returns()
       .filter_map(|loc| {

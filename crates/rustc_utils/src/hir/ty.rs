@@ -3,7 +3,7 @@
 use rustc_data_structures::captures::Captures;
 use rustc_hir::def_id::DefId;
 use rustc_infer::infer::TyCtxtInferExt;
-use rustc_middle::ty::{GenericArgKind, ParamEnv, Region, Ty, TyCtxt};
+use rustc_middle::ty::{GenericArgKind, ParamEnv, Region, Ty, TyCtxt, TypingMode};
 use rustc_trait_selection::infer::InferCtxtExt;
 
 /// Extension trait for [`Ty`].
@@ -28,8 +28,10 @@ pub trait TyExt<'tcx> {
 }
 
 impl<'tcx> TyExt<'tcx> for Ty<'tcx> {
-  type AllRegionsIter<'a> = impl Iterator<Item = Region<'tcx>> + Captures<'tcx> + 'a
-    where Self: 'a;
+  type AllRegionsIter<'a>
+    = impl Iterator<Item = Region<'tcx>> + Captures<'tcx> + 'a
+  where
+    Self: 'a;
 
   fn inner_regions(&self) -> Self::AllRegionsIter<'_> {
     self.walk().filter_map(|part| match part.unpack() {
@@ -46,7 +48,9 @@ impl<'tcx> TyExt<'tcx> for Ty<'tcx> {
   ) -> bool {
     use rustc_infer::traits::EvaluationResult;
 
-    let infcx = tcx.infer_ctxt().build();
+    let infcx = tcx
+      .infer_ctxt()
+      .build(TypingMode::from_param_env(param_env));
     let ty = tcx.erase_regions(*self);
     let result = infcx.type_implements_trait(trait_def_id, [ty], param_env);
     matches!(

@@ -84,7 +84,10 @@ pub trait BodyExt<'tcx> {
 }
 
 impl<'tcx> BodyExt<'tcx> for Body<'tcx> {
-  type AllReturnsIter<'a> = impl Iterator<Item = Location> + Captures<'tcx> + 'a where Self: 'a;
+  type AllReturnsIter<'a>
+    = impl Iterator<Item = Location> + Captures<'tcx> + 'a
+  where
+    Self: 'a;
   fn all_returns(&self) -> Self::AllReturnsIter<'_> {
     self
       .basic_blocks
@@ -98,7 +101,10 @@ impl<'tcx> BodyExt<'tcx> for Body<'tcx> {
       })
   }
 
-  type AllLocationsIter<'a> = impl Iterator<Item = Location> + Captures<'tcx> + 'a where Self: 'a;
+  type AllLocationsIter<'a>
+    = impl Iterator<Item = Location> + Captures<'tcx> + 'a
+  where
+    Self: 'a;
   fn all_locations(&self) -> Self::AllLocationsIter<'_> {
     self
       .basic_blocks
@@ -133,7 +139,9 @@ impl<'tcx> BodyExt<'tcx> for Body<'tcx> {
 
   fn to_string(&self, tcx: TyCtxt<'tcx>) -> Result<String> {
     let mut buffer = Vec::new();
-    write_mir_fn(tcx, self, &mut |_, _| Ok(()), &mut buffer)?;
+    use rustc_middle::mir::pretty;
+    let options = pretty::PrettyPrintMirOptions::from_cli(tcx);
+    write_mir_fn(tcx, self, &mut |_, _| Ok(()), &mut buffer, options)?;
     Ok(String::from_utf8(buffer)?)
   }
 
@@ -166,13 +174,17 @@ impl<'tcx> BodyExt<'tcx> for Body<'tcx> {
     }
   }
 
-  type ArgRegionsIter<'a> = impl Iterator<Item = Region<'tcx>> + Captures<'tcx> + 'a
-  where Self: 'a;
+  type ArgRegionsIter<'a>
+    = impl Iterator<Item = Region<'tcx>> + Captures<'tcx> + 'a
+  where
+    Self: 'a;
 
   type ReturnRegionsIter = impl Iterator<Item = Region<'tcx>>;
 
-  type PlacesIter<'a> = impl Iterator<Item = Place<'tcx>> + Captures<'tcx> + 'a
-  where Self: 'a;
+  type PlacesIter<'a>
+    = impl Iterator<Item = Place<'tcx>> + Captures<'tcx> + 'a
+  where
+    Self: 'a;
 
   fn regions_in_args(&self) -> Self::ArgRegionsIter<'_> {
     self

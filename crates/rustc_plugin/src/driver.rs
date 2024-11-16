@@ -6,7 +6,6 @@ use std::{
 };
 
 use rustc_session::{config::ErrorOutputType, EarlyDiagCtxt};
-use rustc_tools_util::VersionInfo;
 
 use super::plugin::{RustcPlugin, PLUGIN_ARGS};
 use crate::cli::{RUN_ON_ALL_CRATES, SPECIFIC_CRATE, SPECIFIC_TARGET};
