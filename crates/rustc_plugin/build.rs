@@ -1,3 +1,4 @@
+// #![feature(rustc_private)]
 fn main() {
   let toolchain_toml = include_str!("rust-toolchain.toml");
   let toolchain_table = toolchain_toml.parse::<toml::Table>().unwrap();
